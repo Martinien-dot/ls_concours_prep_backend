@@ -1,0 +1,33 @@
+# Environnement Virtuel
+venv/
+.venv/
+env/
+
+# Fichiers Python / Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Fichiers d'environnement et secrets
+.env
+.env.*
+
+# Base de données locale (si SQLite utilisé temporairement)
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# IDE & Editeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker / Postgres volumes (if mapped locally)
+postgres_data/
