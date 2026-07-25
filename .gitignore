@@ -11,6 +11,7 @@ __pycache__/
 # Fichiers d'environnement et secrets
 .env
 .env.*
+*.csv
 
 # Base de données locale (si SQLite utilisé temporairement)
 *.sqlite3
