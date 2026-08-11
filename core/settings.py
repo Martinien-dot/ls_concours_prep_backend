@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'storages',
 
     # Local applications
     'authentication',
@@ -184,3 +185,36 @@ STORAGES = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# 2. Cloudflare R2 Configuration
+R2_ACCOUNT_ID = os.getenv('R2_ACCOUNT_ID')
+AWS_ACCESS_KEY_ID = os.getenv('R2_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('R2_BUCKET_NAME')
+
+AWS_S3_ENDPOINT_URL = f"https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_REGION_NAME = 'auto'  # R2 uses 'auto' for region
+AWS_DEFAULT_ACL = None       # Disables ACLs globally for R2 compatibility
+
+# 3. Storage Backends Setup (Django 4.2+ / 5.0+)
+STORAGES = {
+    "default": {
+        "BACKEND": "core.storage_backends.PublicMediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Media URLs
+custom_domain = os.getenv('R2_CUSTOM_DOMAIN')
+if custom_domain:
+    MEDIA_URL = f"https://{custom_domain}/media/public/"
+else:
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/media/public/"
+
+# Autoriser les gros téléversements (ex: 500 Mo)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 524288000  # 500 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 524288000  # 500 MB

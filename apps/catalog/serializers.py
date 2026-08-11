@@ -15,6 +15,8 @@ class AnneeSerializer(serializers.ModelSerializer):
 
 
 class EpreuveSerializer(serializers.ModelSerializer):
+    sujet_pdf_url = serializers.SerializerMethodField()
+    corrige_pdf_url = serializers.SerializerMethodField()
     is_premium_unlocked = serializers.SerializerMethodField()
 
     class Meta:
@@ -27,8 +29,15 @@ class EpreuveSerializer(serializers.ModelSerializer):
             'sujet_pdf_url',
             'corrige_pdf_url',
             'corrige_video_hls_id',
+            'is_video_processed',
             'is_premium_unlocked',
         )
+
+    def get_sujet_pdf_url(self, instance) -> str | None:
+        return instance.sujet_pdf.url if instance.sujet_pdf else None
+
+    def get_corrige_pdf_url(self, instance) -> str | None:
+        return instance.corrige_pdf.url if instance.corrige_pdf else None
 
     def get_is_premium_unlocked(self, instance) -> bool:
         request = self.context.get('request')
